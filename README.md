@@ -1,6 +1,6 @@
 # 🖋️ Gerador de Assinaturas Profissionais
 
-Este é um aplicativo gráfico simples em Python que gera automaticamente **imagens com assinaturas personalizadas** para documentos como *prescrição* e *evolução*, com base em informações fornecidas pelo usuário (nome, profissão e número de conselho). Ideal para uso em ambientes de saúde ou administrativos.
+Esta é uma interface gráfica simples em Python que gera automaticamente **imagens com assinaturas personalizadas** para documentos como *prescrição* e *evolução*, com base em informações fornecidas pelo usuário (nome, profissão e número de conselho). Ideal para uso em ambientes de saúde ou administrativos.
 
 ---
 
@@ -11,7 +11,6 @@ Este é um aplicativo gráfico simples em Python que gera automaticamente **imag
   - **Evolução** (268×85 px)
   - **Prescrição** (344×143 px)
 - Redimensionamento automático da imagem de assinatura para um **espaço fixo definido**.
-- Salvamento automático em uma **pasta com o nome da pessoa**.
 - Saída final no formato `.bmp`, pronta para uso institucional.
 
 ---
