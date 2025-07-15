@@ -36,8 +36,8 @@ Este é um aplicativo gráfico simples em Python que gera automaticamente **imag
 ```bash
 pip install pillow
 
----
-🔧 Tecnologias usadas
+## **🔧 Tecnologias usadas**
+
 Python 🐍
 
 Tkinter 🎨
