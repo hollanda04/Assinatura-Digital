@@ -35,13 +35,3 @@ Esta é uma interface gráfica simples em Python que gera automaticamente **imag
 ```bash
 pip install pillow
 
-## **🔧 Tecnologias usadas**
-
-Python 🐍
-
-Tkinter 🎨
-
-Pillow 🖼️
-
-PyInstaller (opcional para app desktop)
-
