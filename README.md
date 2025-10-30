@@ -1,3 +1,5 @@
+## Corrigida a sintaxe do código para o padrão correto para o Smart
+
 # 🖋️ Gerador de Assinaturas Profissionais
 
 Esta é uma interface gráfica simples em Python que gera automaticamente **imagens com assinaturas personalizadas** para documentos como *prescrição* e *evolução*, com base em informações fornecidas pelo usuário (nome, profissão e número de conselho). Ideal para uso em ambientes de saúde ou administrativos.

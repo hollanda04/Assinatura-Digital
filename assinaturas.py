@@ -117,7 +117,10 @@ class GeradorAssinaturaApp:
         # Criação da pasta output
         os.makedirs("output", exist_ok=True)
         nome_sanitizado = self._sanitizar_nome_arquivo(nome)
-        nome_arquivo = os.path.join("output", f"{tipo_imagem}_{nome_sanitizado}.bmp")
+        if tipo_imagem == "evolucao":
+            nome_arquivo = os.path.join("output", f"assina_{nome_sanitizado}_evolucao.bmp")
+        else:
+            nome_arquivo = os.path.join("output", f"assina_{nome_sanitizado}_prescricao.bmp")
 
         try:
             img.save(nome_arquivo)
