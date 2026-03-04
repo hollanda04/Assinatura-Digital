@@ -15,6 +15,7 @@ class GeradorAssinaturaApp:
         self.nome_var = tk.StringVar()
         self.conselho_var = tk.StringVar()
         self.profissao_var = tk.StringVar()
+        self.extra_var = tk.StringVar()
 
         tk.Label(master, text="Nome Completo:").grid(row=0, column=0, padx=5, pady=5, sticky="w")
         tk.Entry(master, textvariable=self.nome_var, width=50).grid(row=0, column=1, padx=5, pady=5, sticky="ew")
@@ -25,10 +26,13 @@ class GeradorAssinaturaApp:
         tk.Label(master, text="Profissão:").grid(row=2, column=0, padx=5, pady=5, sticky="w")
         tk.Entry(master, textvariable=self.profissao_var, width=50).grid(row=2, column=1, padx=5, pady=5, sticky="ew")
 
-        tk.Button(master, text="Selecionar Assinatura", command=self.selecionar_assinatura).grid(row=3, column=0, columnspan=2, pady=10)
+        tk.Label(master, text="Extra (Opcional):").grid(row=3, column=0, padx=5, pady=5, sticky="w")
+        tk.Entry(master, textvariable=self.extra_var, width=50).grid(row=3, column=1, padx=5, pady=5, sticky="ew")
 
-        tk.Button(master, text="Gerar Imagem de Evolução", command=self.gerar_evolucao).grid(row=4, column=0, padx=5, pady=5)
-        tk.Button(master, text="Gerar Imagem de Prescrição", command=self.gerar_prescricao).grid(row=4, column=1, padx=5, pady=5)
+        tk.Button(master, text="Selecionar Assinatura", command=self.selecionar_assinatura).grid(row=4, column=0, columnspan=2, pady=10)
+
+        tk.Button(master, text="Gerar Imagem de Evolução", command=self.gerar_evolucao).grid(row=5, column=0, padx=5, pady=5)
+        tk.Button(master, text="Gerar Imagem de Prescrição", command=self.gerar_prescricao).grid(row=5, column=1, padx=5, pady=5)
 
     def selecionar_assinatura(self):
         file_path = filedialog.askopenfilename(filetypes=[("Image Files", "*.png;*.jpg;*.jpeg;*.gif;*.bmp")])
@@ -58,10 +62,13 @@ class GeradorAssinaturaApp:
         nome = self.nome_var.get().strip()
         conselho = self.conselho_var.get().strip()
         profissao = self.profissao_var.get().strip()
+        extra = self.extra_var.get().strip()
 
         if not nome or not conselho:
             messagebox.showerror("Erro", "Preencha nome e número do conselho!")
             return
+
+        textos_para_exibir = [t for t in [nome, conselho, profissao, extra] if t]
 
         img = Image.new('RGBA', (largura, altura), (255, 255, 255, 255))
         draw = ImageDraw.Draw(img)
@@ -80,22 +87,19 @@ class GeradorAssinaturaApp:
             return
 
         if tipo_imagem == "evolucao":
-            # Área para assinatura (100x35)
             assinatura_img = self.redimensionar_assinatura(assinatura_img_original, 100, 35)
             pos_assinatura_x = (largura - assinatura_img.width) // 2
             pos_assinatura_y = 5
             img.paste(assinatura_img, (pos_assinatura_x, pos_assinatura_y), assinatura_img)
 
-            # Texto centralizado
             espacamento_linha = 10
             pos_y_base = 48
-            for i, texto in enumerate([nome, conselho, profissao]):
+            for i, texto in enumerate(textos_para_exibir):
                 largura_texto = draw.textbbox((0, 0), texto, font=fonte_evolucao)[2]
                 pos_x = (largura - largura_texto) // 2
                 draw.text((pos_x, pos_y_base + i * espacamento_linha), texto, fill='black', font=fonte_evolucao)
 
-        else:  # prescricao
-            # NOVA ÁREA DA ASSINATURA: 130x50 em x=195, y=21
+        else:
             ASS_LARG = 130
             ASS_ALT = 50
             ASS_X = 190
@@ -106,24 +110,21 @@ class GeradorAssinaturaApp:
             pos_assinatura_y = ASS_Y + (ASS_ALT - assinatura_img.height) // 2
             img.paste(assinatura_img, (pos_assinatura_x, pos_assinatura_y), assinatura_img)
 
-            # Texto com fonte maior (tamanho 10)
-            espacamento_linha = 10
+            espacamento_linha = 12
             pos_y_base = 94
-            for i, texto in enumerate([nome, conselho, profissao]):
+            for i, texto in enumerate(textos_para_exibir):
                 largura_texto = draw.textbbox((0, 0), texto, font=fonte_prescricao)[2]
                 pos_x = 171 + (138 - largura_texto) // 2
                 draw.text((pos_x, pos_y_base + i * espacamento_linha), texto, fill='black', font=fonte_prescricao)
 
-        # Criação da pasta output
         os.makedirs("output", exist_ok=True)
         nome_sanitizado = self._sanitizar_nome_arquivo(nome)
-        if tipo_imagem == "evolucao":
-            nome_arquivo = os.path.join("output", f"assina_{nome_sanitizado}_evolucao.bmp")
-        else:
-            nome_arquivo = os.path.join("output", f"assina_{nome_sanitizado}_prescricao.bmp")
+        sufixo = "evolucao" if tipo_imagem == "evolucao" else "prescricao"
+        nome_arquivo = os.path.join("output", f"assina_{nome_sanitizado}_{sufixo}.bmp")
 
         try:
-            img.save(nome_arquivo)
+            img_final = img.convert("RGB")
+            img_final.save(nome_arquivo)
             messagebox.showinfo("Sucesso", f"Imagem salva em:\n{nome_arquivo}")
         except Exception as e:
             messagebox.showerror("Erro", f"Não foi possível salvar a imagem:\n{e}")
